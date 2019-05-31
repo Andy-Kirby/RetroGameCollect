@@ -1,9 +1,18 @@
 # RetroGameCollect (09-05-19)
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, qApp, QLabel
+from PyQt5.QtWidgets import (
+    QWidget,
+    QApplication,
+    QMainWindow,
+    QAction,
+    qApp,
+    QLabel,
+    QPushButton,
+)
 from PyQt5.QtGui import QIcon, QPixmap
 import sqlite3
+from entry import Entry
 
 
 def connect():
@@ -43,6 +52,9 @@ class Window(QMainWindow):
         super().__init__()
         self.init_ui()
 
+    def entryWindow(self, entry):
+        self.newWindow = Entry()
+
     def init_ui(self):
 
         self.setWindowTitle("Retro Game Collect")
@@ -54,12 +66,18 @@ class Window(QMainWindow):
         fileMenu.addAction(exitAction)
 
         self.label = QLabel(self)
-        self.label.setPixmap(QPixmap("./images/mainlogo.png"))
+        self.label.setPixmap(QPixmap("./img/mainlogo.png"))
         self.label.setGeometry(50, 0, 800, 75)
+
+        self.add_button = QPushButton("Create New Entry", self)
+        self.add_button.resize(175, 30)
+        self.add_button.move(50, 110)
+        self.add_button.clicked.connect(self.entryWindow)
 
         self.show()
 
 
 app = QApplication(sys.argv)
+app.setStyle("macintosh")
 home = Window()
 sys.exit(app.exec_())
