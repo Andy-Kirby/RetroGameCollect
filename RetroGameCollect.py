@@ -14,10 +14,11 @@ from PyQt5.QtWidgets import (
     QGroupBox,
     QRadioButton,
     QTableWidget,
+    QTableView,
     QLineEdit,
 )
 from PyQt5.QtCore import QSize, QRect
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 import sqlite3
 from entry import Entry
 
@@ -138,6 +139,7 @@ class Window(QMainWindow):
         self.comboBox.addItem("PlayStation 1")
         self.comboBox.addItem("PSOne")
         self.comboBox.addItem("Microsoft XBOX")
+        self.comboBox.activated.connect(self.handleActivated)
 
         # Group Box (Radio Buttons)
         self.group_box_settings = QGroupBox(self)
@@ -145,6 +147,7 @@ class Window(QMainWindow):
         self.group_box_settings.setGeometry(645, 93, 215, 47)
         # Radio Buttons
         self.software = QRadioButton("Software", self)
+        self.software.setChecked(True)
         self.software.move(665, 100)
         self.hardware = QRadioButton("Hardware", self)
         self.hardware.move(760, 100)
@@ -152,7 +155,7 @@ class Window(QMainWindow):
         # Group Box (SQLite3 Table)
         self.group_box_settings = QGroupBox(self)
         self.group_box_settings.setTitle("Results")
-        self.group_box_settings.setGeometry(270, 160, 590, 445)
+        self.group_box_settings.setGeometry(270, 160, 590, 440)
         # SQLite3 Table
         self.tableWidget = QTableWidget(self)
         self.tableWidget.setGeometry(QRect(285, 190, 560, 359))
@@ -166,14 +169,22 @@ class Window(QMainWindow):
         self.tableWidget.verticalHeader().hide()
         header = ["Title", "Product ID", "Grade", "Paid"]
         self.tableWidget.setHorizontalHeaderLabels(header)
+        self.tableWidget.setSelectionBehavior(QTableView.SelectRows)
+        self.tableWidget.setEditTriggers(QTableWidget.NoEditTriggers)
         # Total Games
         self.labelT = QLabel(self)
-        self.labelT.setText("Total Quantity:")
-        self.labelT.move(285, 555)
+        self.labelT.setPixmap(QPixmap("./img/quantity.png"))
+        self.labelT.setGeometry(285, 555, 124, 32)
+        self.tableTotal = QLineEdit(self)
+        self.tableTotal.setGeometry(420, 562, 80, 20)
+        self.tableTotal.setReadOnly(True)
         # Total Spent
         self.labelT = QLabel(self)
-        self.labelT.setText("Total Spent:")
-        self.labelT.move(500, 555)
+        self.labelT.setPixmap(QPixmap("./img/paid.png"))
+        self.labelT.setGeometry(590, 555, 166, 32)
+        self.tableTotal = QLineEdit(self)
+        self.tableTotal.setGeometry(765, 562, 80, 20)
+        self.tableTotal.setReadOnly(True)
         # Footer
         self.label = QLabel(self)
         self.label.setPixmap(QPixmap("./img/footer.png"))
@@ -183,6 +194,9 @@ class Window(QMainWindow):
         self.label.setPixmap(QPixmap("./img/credit.png"))
         self.label.setGeometry(790, 665, 90, 23)
         self.show()
+
+    def handleActivated(self):
+        self.comboText = text
 
 
 app = QApplication(sys.argv)
